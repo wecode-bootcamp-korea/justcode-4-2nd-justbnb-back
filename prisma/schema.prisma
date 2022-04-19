@@ -9,3 +9,86 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id     Int            @id @default(autoincrement())  
+  name  String
+  email String          @unique
+  password String?       
+  created_at DateTime?  @default(now())
+  accommodations_reservation Accommodations_Reservation[]
+  accommodation Accommodation[]
+  wish_list Wish_List[]
+  @@map("users")
+}
+
+model Accommodations_Reservation {
+  id        Int         @id @default(autoincrement())  
+  user_id   Int
+  accommodations_id Int
+  check_in  DateTime
+  check_out  DateTime
+  members   Int
+  created_at DateTime?  @default(now())
+  accommodation   Accommodation     @relation(fields: [accommodations_id], references: [id])
+  user   User     @relation(fields: [user_id], references: [id])
+  @@map("accommodations_reservation")
+}
+
+model Accommodation {
+  id          Int       @id @default(autoincrement())  
+  host_id Int
+  name        String
+  description String    @db.LongText
+  location    String
+  lat         Float
+  long        Float
+  build_type  String
+  room_type   String
+  charge      Int
+  animal_yn   String    @db.VarChar(1)
+  total_members     Int  
+  created_at DateTime?  @default(now())
+  wish_list Wish_List[]  
+  accommodation_image Accommodation_Image[]  
+  accommodation_convenience Accommodation_Convenience[]
+  accommodations_reservation Accommodations_Reservation[]
+  user   User     @relation(fields: [host_id], references: [id])
+  @@map("accommodations")
+}
+
+model Wish_List {
+  id        Int         @id @default(autoincrement())  
+  user_id   Int  
+  accommodations_id Int
+  created_at DateTime?  @default(now())
+  user   User     @relation(fields: [user_id], references: [id])
+  accommodation   Accommodation     @relation(fields: [accommodations_id], references: [id])
+  @@map("wish_list")
+}
+
+model Accommodation_Image {
+  id        Int         @id @default(autoincrement())   
+  accommodations_id Int
+  image_url String
+  created_at DateTime?  @default(now())
+  accommodation   Accommodation     @relation(fields: [accommodations_id], references: [id])
+  @@map("accommodations_images")
+}
+
+model Convenience {
+  id        Int         @id @default(autoincrement())   
+  Convenience_name String
+  created_at DateTime?  @default(now())
+  accommodation_convenience Accommodation_Convenience[]
+  @@map("convenient")
+}
+
+model Accommodation_Convenience {
+  id        Int         @id @default(autoincrement())   
+  accommodations_id Int
+  convenience_id Int
+  accommodation   Accommodation     @relation(fields: [accommodations_id], references: [id])
+  convenience   Convenience     @relation(fields: [convenience_id], references: [id])
+  @@map("accommodation_convenience")
+}
