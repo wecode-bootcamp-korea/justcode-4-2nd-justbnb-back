@@ -18,6 +18,23 @@ const createUser = async (name, email, password, res) => {
     await userDao.createUser(name, email, saltPassword);
 }
 
+const createToken = async (email, password, res) => {
+    const values = [email, password];
+    checkVal(values, res);
+    
+    const getUser = await getUserByEmail(email);
+
+    if(getUser.length <= 0) {
+        errService.errorHandler(409, "EXISTING_USER", res);
+    }    
+    if(!(bcrypt.compareSync(password, getUser[0].password))) {
+        errService.errorHandler(409, "INVALID_USER", res);
+    }    
+    const accessToken = jwt.sign({userId : getUser[0].id}, process.env.SECRET_KEY, {expiresIn: "30m"});
+
+    return accessToken;
+}
+
 const checkVal = (values, res) => {
     for(let i = 0; i < values.length; i++) {
         if(!values[i]) {
@@ -31,4 +48,4 @@ const getUserByEmail = async (email) => {
 }
 
 
-module.exports = { createUser }
+module.exports = { createUser, createToken }
