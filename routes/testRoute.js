@@ -7,7 +7,7 @@ const uploader = require("../middleware/upload");
 
 router.get("/ping", testController.ping);
 router.post("/authtest", authMiddleware.auth, testController.authtest);
-router.post("/upload", uploader.uploadHandle, testController.upload);
+router.post("/upload", uploader.uploadHandle);
 
 //router.use("/", testController.error);
 

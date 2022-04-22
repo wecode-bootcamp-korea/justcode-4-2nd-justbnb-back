@@ -52,8 +52,14 @@ const uploadHandle = async (req, res, next) => {
             if(err) {
                 console.error(err);
                 return res.status(400).json({message : err.code});
-            }
-            next();
+            }            
+            let filesLocation = [];
+
+            req.files.map((file) => {
+                filesLocation.push(file.location);
+            });
+            
+            res.status(200).json({message : `upload success`, filesLocation : filesLocation});            
         });
         
     } catch (error) {
