@@ -30,7 +30,7 @@ const createToken = async (email, password, res) => {
     if(!(bcrypt.compareSync(password, getUser[0].password))) {
         errService.errorHandler(409, "INVALID_USER", res);
     }    
-    const accessToken = jwt.sign({userId : getUser[0].id}, process.env.SECRET_KEY, {expiresIn: "30m"});
+    const accessToken = jwt.sign({userId : getUser[0].id}, process.env.SECRET_KEY, {expiresIn: "3h"});
 
     return accessToken;
 }
