@@ -32,4 +32,21 @@ const createConvenience = async (accommodationsId, convenienceId) => {
     }    
 }
 
-module.exports = { getUser, createAccommodations, getAccommodations, createAccommodationsImg, createConvenience }
+const getAccommodationsList = async (city) => {
+    return await prisma.$queryRaw`
+        select 
+            acc.id,
+            acc.name,
+            acc.city,
+            acc.lat,
+            acc.long,
+            acc.build_type,
+            acc.room_type,
+            acc.total_members,
+            (select json_arrayagg(ct.Convenience_name) from accommodation_convenience ac join convenient ct on ac.convenience_id = ct.id where ac.accommodations_id = acc.id) convenience_name,
+            (select json_arrayagg(ai.image_url) from accommodations_images ai where ai.accommodations_id = acc.id) image_url
+        from accommodations acc 
+        where acc.city = ${city}`
+}
+
+module.exports = { getUser, createAccommodations, getAccommodations, createAccommodationsImg, createConvenience, getAccommodationsList }

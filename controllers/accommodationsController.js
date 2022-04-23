@@ -23,8 +23,24 @@ const registration = async (req, res, next) => {
 
 }
 
+const accommodationsList = async (req, res, next) => {
+
+    try {
+        const { city } = req.query;
+        const accommodationsList = await accommodationsService.getAccommodationsList(city, res);
+        
+        res.status(200).json({accommodationsList : accommodationsList});
+    } catch (error) {
+        next(error);
+        await prisma.$disconnect();
+    } finally {
+        await prisma.$disconnect();
+    }
+
+}
+
 const error = (err, req, res, next) => {
     console.error(err);
 }
 
-module.exports = { error, registration }
+module.exports = { error, registration, accommodationsList }

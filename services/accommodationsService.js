@@ -29,6 +29,12 @@ const createConvenience = async (userId, convenienceId, res) => {
     await accommodationsDao.createConvenience(accommodationsId[0].id, convenienceId);
 }
 
+const getAccommodationsList = async (city, res) => {
+    checkVal(city, res);
+
+    return await accommodationsDao.getAccommodationsList(city);
+}
+
 const getAccommodationsById = async (userId) => {
     return await accommodationsDao.getAccommodations(userId);
 }
@@ -38,11 +44,17 @@ const getUserById = async (userId) => {
 }
 
 const checkVal = (values, res) => {
+    if(values.length === 0) {
+        if(values === null || values === undefined || values === "") {
+            errService.errorHandler(400, "KEY_ERROR", res);
+        }
+    }
+
     for(let i = 0; i < values.length; i++) {
-        if(!values[i]) {
+        if(!values[i] || values[i] === null || values[i] === undefined || values[i] === "") {
             errService.errorHandler(400, "KEY_ERROR", res);
         }
     }
 }
 
-module.exports = { createAccommodations, createAccommodationsImg, createConvenience }
+module.exports = { createAccommodations, createAccommodationsImg, createConvenience, getAccommodationsList }
