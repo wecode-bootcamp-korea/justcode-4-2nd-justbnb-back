@@ -37,9 +37,10 @@ model Accommodations_Reservation {
 
 model Accommodation {
   id          Int       @id @default(autoincrement())  
-  host_id Int
+  host_id     Int
   name        String
   description String    @db.LongText
+  city        String
   location    String
   lat         Float
   long        Float

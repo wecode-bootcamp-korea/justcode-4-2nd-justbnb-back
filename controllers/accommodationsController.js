@@ -1,4 +1,4 @@
-const userService = require("../services/userService");
+const accommodationsService = require("../services/accommodationsService");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
@@ -7,11 +7,13 @@ const registration = async (req, res, next) => {
 
     try {
         const { accessToken, userId } = req.headers;
-        const { name, email, password } = req.body;
+        const { name, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers, imageUrl, convenienceId } = req.body;
         
-        await userService.createUser(name, email, password, res);
-
-        res.status(201).json({message : `create user success`});
+        await accommodationsService.createAccommodations(userId, name, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers, res);
+        await accommodationsService.createAccommodationsImg(userId, imageUrl, res);
+        await accommodationsService.createConvenience(userId, convenienceId, res);
+        
+        res.status(201).json({message : `create accommodations success`, accessToken : accessToken});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
