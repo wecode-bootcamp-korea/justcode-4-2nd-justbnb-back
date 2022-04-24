@@ -35,6 +35,24 @@ const getAccommodationsList = async (city, res) => {
     return await accommodationsDao.getAccommodationsList(city);
 }
 
+const getAccommodations = async (id, res) => {
+    checkVal(id, res);
+
+    return await accommodationsDao.getAccommodationsInfo(id);
+}
+
+const getAccommodationsImages = async (accommodationsId, res) => {
+    checkVal(accommodationsId, res);
+
+    return await accommodationsDao.getAccommodationsImages(accommodationsId);
+}
+
+const getAccommodationsConvenience = async (accommodationsId, res) => {
+    checkVal(accommodationsId, res);
+
+    return await accommodationsDao.getAccommodationsConvenience(accommodationsId);
+}
+
 const getAccommodationsById = async (userId) => {
     return await accommodationsDao.getAccommodations(userId);
 }
@@ -57,4 +75,12 @@ const checkVal = (values, res) => {
     }
 }
 
-module.exports = { createAccommodations, createAccommodationsImg, createConvenience, getAccommodationsList }
+module.exports = { 
+    createAccommodations, 
+    createAccommodationsImg, 
+    createConvenience, 
+    getAccommodationsList, 
+    getAccommodations, 
+    getAccommodationsImages, 
+    getAccommodationsConvenience 
+}

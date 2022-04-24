@@ -39,8 +39,66 @@ const accommodationsList = async (req, res, next) => {
 
 }
 
+const accommodations = async (req, res, next) => {
+
+    try {
+        const { id } = req.params;
+
+        const accommodations = await accommodationsService.getAccommodations(id, res);
+        
+        res.status(200).json({accommodations : accommodations});
+    } catch (error) {
+        next(error);
+        await prisma.$disconnect();
+    } finally {
+        await prisma.$disconnect();
+    }
+
+}
+
+const accommodationsImages = async (req, res, next) => {
+
+    try {
+        const { accommodationsId } = req.query;
+        
+        const accommodationsImages = await accommodationsService.getAccommodationsImages(accommodationsId, res);
+        
+        res.status(200).json({accommodationsImages : accommodationsImages});
+    } catch (error) {
+        next(error);
+        await prisma.$disconnect();
+    } finally {
+        await prisma.$disconnect();
+    }
+
+}
+
+const accommodationsConvenience = async (req, res, next) => {
+
+    try {
+        const { accommodationsId } = req.query;
+        
+        const accommodationsConvenience = await accommodationsService.getAccommodationsConvenience(accommodationsId, res);
+        
+        res.status(200).json({accommodationsConvenience : accommodationsConvenience});
+    } catch (error) {
+        next(error);
+        await prisma.$disconnect();
+    } finally {
+        await prisma.$disconnect();
+    }
+
+}
+
 const error = (err, req, res, next) => {
     console.error(err);
 }
 
-module.exports = { error, registration, accommodationsList }
+module.exports = { 
+    error, 
+    registration, 
+    accommodationsList, 
+    accommodations, 
+    accommodationsImages, 
+    accommodationsConvenience 
+}

@@ -43,10 +43,62 @@ const getAccommodationsList = async (city) => {
             acc.build_type,
             acc.room_type,
             acc.total_members,
-            (select json_arrayagg(ct.Convenience_name) from accommodation_convenience ac join convenient ct on ac.convenience_id = ct.id where ac.accommodations_id = acc.id) convenience_name,
+            (select json_arrayagg(ct.convenience_name) from accommodation_convenience ac join convenience ct on ac.convenience_id = ct.id where ac.accommodations_id = acc.id) convenience_name,
             (select json_arrayagg(ai.image_url) from accommodations_images ai where ai.accommodations_id = acc.id) image_url
         from accommodations acc 
         where acc.city = ${city}`
 }
 
-module.exports = { getUser, createAccommodations, getAccommodations, createAccommodationsImg, createConvenience, getAccommodationsList }
+const getAccommodationsInfo = async (id) => {
+    return await prisma.$queryRaw`
+        select 
+            acc.id,
+            ur.name host_name,
+            acc.name accommodations_name,
+            description,
+            acc.city,
+            acc.location,
+            REPLACE(SUBSTRING_INDEX(acc.location, ' ', 2), ' ', ',') sub_location,
+            acc.location,
+            acc.lat,
+            acc.long,
+            acc.build_type,
+            acc.room_type,
+            acc.animal_yn,
+            acc.charge,
+            acc.total_members
+        from accommodations acc
+        join users ur
+        on acc.host_id = ur.id
+        where acc.id = ${id}`
+}
+
+const getAccommodationsImages = async (accommodationsId) => {
+    return await prisma.$queryRaw`
+        select 
+            json_arrayagg(image_url) image_url
+        from accommodations_images
+        where accommodations_id = ${accommodationsId}`
+}
+
+const getAccommodationsConvenience = async (accommodationsId) => {
+    return await prisma.$queryRaw`
+        select 
+            json_arrayagg(convenience_name) convenience_name
+        from accommodation_convenience ac
+        join convenience ct
+        on ac.convenience_id = ct.id
+        where ac.accommodations_id = ${accommodationsId}`
+}
+
+module.exports = { 
+    getUser, 
+    createAccommodations, 
+    getAccommodations, 
+    createAccommodationsImg, 
+    createConvenience, 
+    getAccommodationsList, 
+    getAccommodationsInfo, 
+    getAccommodationsImages, 
+    getAccommodationsConvenience 
+}

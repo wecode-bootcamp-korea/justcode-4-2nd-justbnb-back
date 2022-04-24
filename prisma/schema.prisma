@@ -79,10 +79,10 @@ model Accommodation_Image {
 
 model Convenience {
   id        Int         @id @default(autoincrement())   
-  Convenience_name String
+  convenience_name String
   created_at DateTime?  @default(now())
   accommodation_convenience Accommodation_Convenience[]
-  @@map("convenient")
+  @@map("convenience")
 }
 
 model Accommodation_Convenience {
