@@ -1,4 +1,5 @@
 const testService = require("../services/testService");
+
 //const { PrismaClient } = require("@prisma/client");
 
 //const prisma = new PrismaClient();
@@ -39,8 +40,30 @@ const authtest = async (req, res, next) => {
 
 }
 
+const upload = async (req, res, next) => {
+
+    try {
+        
+        //service로
+        if(req.files.length >= 1) {
+            req.files.map((data) => {
+                console.log(data.location);
+            });
+        }
+        
+
+        res.status(200).json({message : `upload success`});
+    } catch (error) {
+        next(error);
+        //await prisma.$disconnect();
+    } finally {
+        //await prisma.$disconnect();
+    }
+
+}
+
 const error = (err, req, res, next) => {
     console.error(err);
 }
 
-module.exports = { ping, error, authtest}
+module.exports = { ping, error, authtest, upload }
