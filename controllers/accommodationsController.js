@@ -26,8 +26,9 @@ const registration = async (req, res, next) => {
 const accommodationsList = async (req, res, next) => {
 
     try {
-        const { city } = req.query;
-        const accommodationsList = await accommodationsService.getAccommodationsList(city, res);
+        const { city, buildType, roomType, animalYn, totalMembers, charge } = req.query;
+        
+        const accommodationsList = await accommodationsService.getAccommodationsList(city, buildType, roomType, animalYn, totalMembers, charge, res);
         
         res.status(200).json({accommodationsList : accommodationsList});
     } catch (error) {
