@@ -32,7 +32,7 @@ const createConvenience = async (accommodationsId, convenienceId) => {
     }    
 }
 
-const getAccommodationsList = async (city) => {
+const getAccommodationsList = async (city, buildType, roomType, animalYn, totalMembers, charge) => {    
     return await prisma.$queryRaw`
         select 
             acc.id,
@@ -46,8 +46,13 @@ const getAccommodationsList = async (city) => {
             (select json_arrayagg(ct.convenience_name) from accommodation_convenience ac join convenience ct on ac.convenience_id = ct.id where ac.accommodations_id = acc.id) convenience_name,
             (select json_arrayagg(ai.image_url) from accommodations_images ai where ai.accommodations_id = acc.id) image_url
         from accommodations acc 
-        ${city === 'all' ? 
-            Prisma.empty : Prisma.sql`where acc.city = ${city}`}`
+        where 1=1
+        ${city === 'all' ? Prisma.empty : Prisma.sql`and acc.city = ${city}`}
+        ${!!buildType ? Prisma.sql`and acc.build_type = ${buildType}` : Prisma.empty}
+        ${!!roomType ? Prisma.sql`and acc.room_type = ${roomType}` : Prisma.empty}
+        ${!!animalYn ? Prisma.sql`and acc.animal_yn = ${animalYn}` : Prisma.empty}
+        ${!!totalMembers ? Prisma.sql`and acc.total_members >= ${totalMembers}` : Prisma.empty}
+        ${!!charge ? Prisma.sql`and acc.charge <= ${charge}` : Prisma.empty}`
 }
 
 const getAccommodationsInfo = async (id) => {

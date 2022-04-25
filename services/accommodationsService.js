@@ -29,10 +29,8 @@ const createConvenience = async (userId, convenienceId, res) => {
     await accommodationsDao.createConvenience(accommodationsId[0].id, convenienceId);
 }
 
-const getAccommodationsList = async (city, res) => {
-    checkVal(city, res);
-
-    return await accommodationsDao.getAccommodationsList(city);
+const getAccommodationsList = async (city, buildType, roomType, animalYn, totalMembers, charge, res) => {
+    return await accommodationsDao.getAccommodationsList(city, buildType, roomType, animalYn, totalMembers, charge);
 }
 
 const getAccommodations = async (id, res) => {
