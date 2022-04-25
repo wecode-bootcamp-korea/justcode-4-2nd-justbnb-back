@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
@@ -46,7 +46,8 @@ const getAccommodationsList = async (city) => {
             (select json_arrayagg(ct.convenience_name) from accommodation_convenience ac join convenience ct on ac.convenience_id = ct.id where ac.accommodations_id = acc.id) convenience_name,
             (select json_arrayagg(ai.image_url) from accommodations_images ai where ai.accommodations_id = acc.id) image_url
         from accommodations acc 
-        where acc.city = ${city}`
+        ${city === 'all' ? 
+            Prisma.empty : Prisma.sql`where acc.city = ${city}`}`
 }
 
 const getAccommodationsInfo = async (id) => {
@@ -58,7 +59,8 @@ const getAccommodationsInfo = async (id) => {
             description,
             acc.city,
             acc.location,
-            REPLACE(SUBSTRING_INDEX(acc.location, ' ', 2), ' ', ',') sub_location,
+            SUBSTRING_INDEX(acc.location, ' ', 1) district,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(acc.location, ' ', 2), ' ', -1) neighborhood,
             acc.location,
             acc.lat,
             acc.long,
