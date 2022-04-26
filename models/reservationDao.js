@@ -13,4 +13,22 @@ const getAccommodations = async (accommodationsId) => {
         select host_id from accommodations where id = ${accommodationsId}`
 }
 
-module.exports = { createReservation, getAccommodations }
+const getReservationList = async (userId) => {
+    return await prisma.$queryRaw`
+        select 
+            ac.id,
+            ac.name,
+            (select name from users where id = ar.user_id) user_name,
+            DATE_FORMAT(ar.check_in, '%Y.%m.%d') check_in,
+            DATE_FORMAT(ar.check_out, '%Y.%m.%d') check_out,
+            ar.members,
+            (ac.charge * ar.members) total_charge
+        from 
+        accommodations ac
+        join accommodations_reservation ar
+        on ac.id = ar.accommodations_id
+        where ac.host_id = ${userId}
+        order by ac.id`
+}
+
+module.exports = { createReservation, getAccommodations, getReservationList }
