@@ -1,5 +1,6 @@
 const userService = require("../services/userService");
 const { PrismaClient } = require("@prisma/client");
+const got = require("got");
 
 const prisma = new PrismaClient();
 
@@ -37,8 +38,39 @@ const signin = async (req, res, next) => {
 
 }
 
+const kakao = async (req, res, next) => {
+
+    try {
+        const code = req.query.code;
+        //console.log(code);
+        console.log("-----step1 인가코드 발급------");
+        await got.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${process.env.KAKAO_REDIRECT_URI}&code=${code}&client_secret=${process.env.KAKAO_CLIENT_SECRET}`,
+            {headers: {'Content-type' : 'application/x-www-form-urlencoded;charset=utf-8'}})
+            .then(res => JSON.parse(res.body))
+            .then((result) => {
+                console.log("-----step2 토큰 발급------");
+                got.get(`https://kapi.kakao.com/v2/user/me`,
+                    {headers: {'Content-type' : 'application/x-www-form-urlencoded;charset=utf-8',
+                                'Authorization' : `Bearer ${result.access_token}`}
+                })
+                .then((result) => {
+                    console.log("-----step3 사용자 정보 추출------");
+                    //console.log(JSON.parse(result.body));
+                    //console.log(JSON.parse(result.body).kakao_account);
+                    console.log(JSON.parse(result.body).kakao_account.email);
+                    console.log(JSON.parse(result.body).kakao_account.profile.nickname);
+                });                
+            });
+
+    } catch {
+
+    }
+    
+    res.status(200).json({message : "test-URL"});
+}
+
 const error = (err, req, res, next) => {
     console.error(err);
 }
 
-module.exports = { error, signup, signin }
+module.exports = { error, signup, signin, kakao }
