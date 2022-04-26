@@ -73,12 +73,25 @@ const checkVal = (values, res) => {
     }
 }
 
+const createAccommodationsImagesConvenience = async (userId, name, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers, imageUrl, convenienceId, res) => {
+    
+    const values = [userId, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers];
+    checkVal(values, res);
+    checkVal(imageUrl, res);
+    checkVal(convenienceId, res);
+
+    const getUser = await getUserById(userId);
+    if(getUser.length <= 0) {
+        errService.errorHandler(409, "EXISTING_USER", res);
+    }
+
+    await accommodationsDao.createAccommodationsImagesConvenience(getUser[0].id, name, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers, imageUrl, convenienceId);
+}
+
 module.exports = { 
-    createAccommodations, 
-    createAccommodationsImg, 
-    createConvenience, 
+    createAccommodationsImagesConvenience,
     getAccommodationsList, 
     getAccommodations, 
     getAccommodationsImages, 
-    getAccommodationsConvenience 
+    getAccommodationsConvenience
 }
