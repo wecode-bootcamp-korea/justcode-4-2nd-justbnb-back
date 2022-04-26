@@ -15,7 +15,7 @@ const createAccommodations = async (userId, name, description, city, location, l
 
 const getAccommodations = async (userId) => {
     return await prisma.$queryRaw`
-        select id from accommodations where host_id = ${userId}`
+        select id from accommodations where host_id = ${userId} order by id desc limit 1`
 }
 
 const createAccommodationsImg = async (accommodationsId, imageUrl) => {
@@ -97,15 +97,24 @@ const getAccommodationsConvenience = async (accommodationsId) => {
         on ac.convenience_id = ct.id
         where ac.accommodations_id = ${accommodationsId}`
 }
+const createAccommodationsImagesConvenience = async (userId, name, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers, imageUrl, convenienceId) => {   
+   
+    await prisma.$transaction(async (prisma) => {
+        await createAccommodations(userId, name, description, city, location, lat, long, buildType, roomType, charge, animalYn, totalMembers);
+
+        const accommodationsId = await getAccommodations(userId);
+        
+        await createAccommodationsImg(accommodationsId[0].id, imageUrl);
+        await createConvenience(accommodationsId[0].id, convenienceId);
+    });
+}
 
 module.exports = { 
     getUser, 
-    createAccommodations, 
     getAccommodations, 
-    createAccommodationsImg, 
-    createConvenience, 
     getAccommodationsList, 
     getAccommodationsInfo, 
     getAccommodationsImages, 
-    getAccommodationsConvenience 
+    getAccommodationsConvenience,
+    createAccommodationsImagesConvenience
 }
