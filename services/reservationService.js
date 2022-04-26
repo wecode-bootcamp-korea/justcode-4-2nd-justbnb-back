@@ -13,6 +13,10 @@ const createReservation = async (userId, accommodationsId, checkIn, checkOut, me
     await reservationDao.createReservation(userId, accommodationsId, checkIn, checkOut, members);
 }
 
+const getReservationList = async (userId, res) => {
+    return await reservationDao.getReservationList(userId);
+}
+
 const getAccommodationsById = async (accommodationsId) => {
     return await reservationDao.getAccommodations(accommodationsId);
 }
@@ -31,4 +35,4 @@ const checkVal = (values, res) => {
     }
 }
 
-module.exports = { createReservation }
+module.exports = { createReservation, getReservationList }

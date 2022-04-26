@@ -5,6 +5,7 @@ const reservationController = require("../controllers/reservationController");
 const authMiddleware = require("../middleware/authorization");
 
 router.post("/", authMiddleware.auth, reservationController.createReservation);
+router.get("/host", authMiddleware.auth, reservationController.reservationList);
 router.use("/", reservationController.error);
 
 module.exports = router;

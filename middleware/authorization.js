@@ -4,7 +4,7 @@ const errService = require("../services/errorService");
 const auth = async (req, res, next) => {
 
     try {
-        const { accessToken } = Object.keys(req.body).length === 0 ? req.query : req.body;       
+        const accessToken = Object.keys(req.body).length === 0 ? req.headers.accesstoken : req.body.accessToken;
         
         jwt.verify(accessToken, process.env.SECRET_KEY, 
 
