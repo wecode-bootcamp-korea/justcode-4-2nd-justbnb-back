@@ -38,8 +38,25 @@ const reservationList = async (req, res, next) => {
 
 }
 
+const reservation = async (req, res, next) => {
+
+    try {
+        const { accessToken, userId } = req.headers;
+
+        const reservation = await reservationService.getReservation(userId, res);
+
+        res.status(200).json({ accessToken : accessToken, reservation : reservation});
+    } catch (error) {
+        next(error);
+        await prisma.$disconnect();
+    } finally {
+        await prisma.$disconnect();
+    }
+
+}
+
 const error = (err, req, res, next) => {
     console.error(err);
 }
 
-module.exports = { error, createReservation, reservationList }
+module.exports = { error, createReservation, reservationList, reservation }
