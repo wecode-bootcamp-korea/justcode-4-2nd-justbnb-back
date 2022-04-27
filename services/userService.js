@@ -25,7 +25,7 @@ const createToken = async (email, password, res) => {
     const getUser = await getUserByEmail(email);
 
     if(getUser.length <= 0) {
-        errService.errorHandler(409, "EXISTING_USER", res);
+        errService.errorHandler(409, "INVALID_USER", res);
     }    
     if(!(bcrypt.compareSync(password, getUser[0].password))) {
         errService.errorHandler(409, "INVALID_USER", res);
