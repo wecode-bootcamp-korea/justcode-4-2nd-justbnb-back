@@ -10,7 +10,7 @@ const signup = async (req, res, next) => {
         
         await userService.createUser(name, email, password, res);
 
-        res.status(201).json({message : `create user success`});
+        res.status(201).json({message : `create user success`, status : 201});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
@@ -27,7 +27,7 @@ const signin = async (req, res, next) => {
         
         const accessToken = await userService.createToken(email, password, res);
 
-        res.status(200).json({accessToken : accessToken});
+        res.status(200).json({accessToken : accessToken, status : 200});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
