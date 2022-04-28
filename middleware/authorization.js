@@ -34,7 +34,7 @@ const updateToken = (decode, accessToken) => {
     let newAccessToken;
     
     (expDate-nowDate) < 60 * 60 * 1000 ? 
-        newAccessToken = jwt.sign({userId : decode.userId}, process.env.SECRET_KEY, {expiresIn: "3h"})
+        newAccessToken = jwt.sign({userId : decode.userId}, process.env.SECRET_KEY, {expiresIn: "6h"})
         : newAccessToken = accessToken;
 
     return newAccessToken;
