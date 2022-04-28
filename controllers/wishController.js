@@ -18,7 +18,7 @@ const wish = async (req, res, next) => {
             wish = await wishService.getWishList(userId, city, res);
         }        
 
-        res.status(200).json({accessToken : accessToken, wish : wish});
+        res.status(200).json({accessToken : accessToken, wish : wish, status : 200});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
@@ -35,7 +35,7 @@ const myWishList = async (req, res, next) => {
 
         let myWishList = await wishService.getMyWishList(userId, res);
 
-        res.status(200).json({accessToken : accessToken, myWishList : myWishList});
+        res.status(200).json({accessToken : accessToken, myWishList : myWishList, status : 200});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
@@ -53,7 +53,7 @@ const createWish = async (req, res, next) => {
 
         await wishService.createWish(userId, accommodationsId, res);
 
-        res.status(201).json({message : `create wish success`, accessToken : accessToken});
+        res.status(201).json({message : `create wish success`, accessToken : accessToken, status : 201});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
@@ -71,7 +71,7 @@ const deleteWish = async (req, res, next) => {
 
         await wishService.deleteWish(userId, accommodationsId, res);
 
-        res.status(200).json({message : `delete wish success`, accessToken : accessToken});
+        res.status(200).json({message : `delete wish success`, accessToken : accessToken, status : 200});
     } catch (error) {
         next(error);
         await prisma.$disconnect();
