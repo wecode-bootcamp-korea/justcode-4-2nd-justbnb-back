@@ -51,7 +51,7 @@ const uploadHandle = async (req, res, next) => {
         uploader(req, res, (err) => {
             if(err) {
                 console.error(err);
-                return res.status(400).json({message : err.code});
+                return res.status(400).json({message : err.code, status : 400});
             }            
             let filesLocation = [];
 
@@ -59,7 +59,7 @@ const uploadHandle = async (req, res, next) => {
                 filesLocation.push(file.location);
             });
             
-            res.status(200).json({message : `upload success`, filesLocation : filesLocation});            
+            res.status(200).json({message : `upload success`, filesLocation : filesLocation, status : 201});
         });
         
     } catch (error) {
