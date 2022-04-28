@@ -17,7 +17,7 @@ const getWishList = async (userId, city) => {
             ifnull((select REPLACE(user_id, user_id, 'Y') from wish_list where accommodations_id = ac.id and user_id = ${userId}), 'N') wish_yn
         from accommodations ac
         where 1=1
-        ${city === 'all' ? Prisma.empty : Prisma.sql`and acc.city = ${city}`}`
+        ${city === 'all' ? Prisma.empty : Prisma.sql`and ac.city = ${city}`}`
 }
 
 const getMyWishList = async (userId) => {
