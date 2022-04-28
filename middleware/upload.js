@@ -12,7 +12,7 @@ const s3 = new AWS.S3({
 let nowDate = new Date();
 let directory = `${nowDate.getFullYear()}_${nowDate.getMonth()+1}_${nowDate.getDate()}`;
 const allowFileExtension = [".jpg",".jpeg"];
-const limitsize = 3 * 1024 * 1024;
+const limitsize = 10 * 1024 * 1024;
 const limitCount = 10;
 
 let fileErr = new Error("file invalid type");
@@ -43,7 +43,7 @@ const upload = multer({
         files: limitCount
     },
 });
-const uploader = upload.array("image");
+const uploader = upload.array("images");
 
 const uploadHandle = async (req, res, next) => {
 
