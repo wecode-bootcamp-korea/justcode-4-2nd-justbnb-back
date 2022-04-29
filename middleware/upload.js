@@ -11,8 +11,8 @@ const s3 = new AWS.S3({
 
 let nowDate = new Date();
 let directory = `${nowDate.getFullYear()}_${nowDate.getMonth()+1}_${nowDate.getDate()}`;
-const allowFileExtension = [".jpg",".jpeg"];
-const limitsize = 10 * 1024 * 1024;
+const allowFileExtension = [".jpg",".jpeg",".png"];
+const limitsize = 15 * 1024 * 1024;
 const limitCount = 10;
 
 let fileErr = new Error("file invalid type");
