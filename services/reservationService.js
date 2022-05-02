@@ -14,11 +14,23 @@ const createReservation = async (userId, accommodationsId, checkIn, checkOut, me
 }
 
 const getReservationList = async (userId, res) => {
-    return await reservationDao.getReservationList(userId);
+
+    const reservationList = await reservationDao.getReservationList(userId);
+    
+    if(reservationList.length <= 0) {
+        errService.errorHandler(403, "EMPTY_DATA", res);
+    }    
+    return reservationList;
 }
 
 const getReservation = async (userId, res) => {
-    return await reservationDao.getReservation(userId);
+
+    const reservation = await reservationDao.getReservation(userId);
+
+    if(reservation.length <= 0) {
+        errService.errorHandler(403, "EMPTY_DATA", res);
+    } 
+    return reservation;
 }
 
 const getAccommodationsById = async (accommodationsId) => {

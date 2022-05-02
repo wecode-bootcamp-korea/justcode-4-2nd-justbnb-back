@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
@@ -16,7 +16,8 @@ const getWishList = async (userId, city) => {
             ac.id,
             ifnull((select REPLACE(user_id, user_id, 'Y') from wish_list where accommodations_id = ac.id and user_id = ${userId}), 'N') wish_yn
         from accommodations ac
-        where ac.city = ${city}`
+        where 1=1
+        ${city === 'all' ? Prisma.empty : Prisma.sql`and ac.city = ${city}`}`
 }
 
 const getMyWishList = async (userId) => {

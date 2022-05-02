@@ -11,8 +11,8 @@ const s3 = new AWS.S3({
 
 let nowDate = new Date();
 let directory = `${nowDate.getFullYear()}_${nowDate.getMonth()+1}_${nowDate.getDate()}`;
-const allowFileExtension = [".jpg",".jpeg"];
-const limitsize = 3 * 1024 * 1024;
+const allowFileExtension = [".jpg",".jpeg",".png"];
+const limitsize = 15 * 1024 * 1024;
 const limitCount = 10;
 
 let fileErr = new Error("file invalid type");
@@ -43,7 +43,7 @@ const upload = multer({
         files: limitCount
     },
 });
-const uploader = upload.array("image");
+const uploader = upload.array("images");
 
 const uploadHandle = async (req, res, next) => {
 
@@ -51,7 +51,7 @@ const uploadHandle = async (req, res, next) => {
         uploader(req, res, (err) => {
             if(err) {
                 console.error(err);
-                return res.status(400).json({message : err.code});
+                return res.status(400).json({message : err.code, status : 400});
             }            
             let filesLocation = [];
 
@@ -59,7 +59,7 @@ const uploadHandle = async (req, res, next) => {
                 filesLocation.push(file.location);
             });
             
-            res.status(200).json({message : `upload success`, filesLocation : filesLocation});            
+            res.status(200).json({message : `upload success`, filesLocation : filesLocation, status : 201});
         });
         
     } catch (error) {
