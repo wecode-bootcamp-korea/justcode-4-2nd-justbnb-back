@@ -35,6 +35,18 @@ const createToken = async (email, password, res) => {
     return accessToken;
 }
 
+const createTokenByKakao = async (userEmail, userNickname, res) => {
+    let getUser = await getUserByEmail(userEmail);
+
+    if(getUser.length <= 0) {
+        await userDao.createUser(userNickname, userEmail);
+        getUser = await getUserByEmail(userEmail);
+    }
+    const accessToken = jwt.sign({userId : getUser[0].id}, process.env.SECRET_KEY, {expiresIn: "6h"});
+
+    return accessToken;
+}
+
 const checkVal = (values, res) => {
     for(let i = 0; i < values.length; i++) {
         if(!values[i]) {
@@ -48,4 +60,4 @@ const getUserByEmail = async (email) => {
 }
 
 
-module.exports = { createUser, createToken }
+module.exports = { createUser, createToken, createTokenByKakao }
