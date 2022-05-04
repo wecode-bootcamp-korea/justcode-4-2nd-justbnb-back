@@ -1,4 +1,5 @@
 const testService = require("../services/testService");
+
 //const { PrismaClient } = require("@prisma/client");
 
 //const prisma = new PrismaClient();
@@ -18,8 +19,51 @@ const ping = async (req, res, next) => {
 
 }
 
+const authtest = async (req, res, next) => {
+
+    try {
+        const { accessToken, userId } = req.headers;
+        const { email, name } = req.body;
+        
+        //console.log(userId);
+        //console.log(accessToken);
+        //console.log(email);
+        //console.log(name);
+
+        //jwt expired - 만료
+        //invalid signature - 토큰수정
+
+        res.status(200).json({accessToken : accessToken});
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+const upload = async (req, res, next) => {
+
+    try {
+        
+        //service로
+        if(req.files.length >= 1) {
+            req.files.map((data) => {
+                console.log(data.location);
+            });
+        }
+        
+
+        res.status(200).json({message : `upload success`});
+    } catch (error) {
+        next(error);
+        //await prisma.$disconnect();
+    } finally {
+        //await prisma.$disconnect();
+    }
+
+}
+
 const error = (err, req, res, next) => {
     console.error(err);
 }
 
-module.exports = { ping, error}
+module.exports = { ping, error, authtest, upload }

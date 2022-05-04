@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -37,9 +38,10 @@ model Accommodations_Reservation {
 
 model Accommodation {
   id          Int       @id @default(autoincrement())  
-  host_id Int
+  host_id     Int
   name        String
   description String    @db.LongText
+  city        String
   location    String
   lat         Float
   long        Float
@@ -78,10 +80,10 @@ model Accommodation_Image {
 
 model Convenience {
   id        Int         @id @default(autoincrement())   
-  Convenience_name String
+  convenience_name String
   created_at DateTime?  @default(now())
   accommodation_convenience Accommodation_Convenience[]
-  @@map("convenient")
+  @@map("convenience")
 }
 
 model Accommodation_Convenience {
